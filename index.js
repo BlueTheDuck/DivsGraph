@@ -5,14 +5,49 @@ AppDivs.amntUsed = [];
 var AppGraph = {};
 AppGraph.dom = document.getElementById("graph");
 AppGraph.g = AppGraph.dom.getContext('2d');
-AppGraph.pointSize = 5;
+AppGraph.pointSize = 1;
 AppGraph.g.fillText("Bruh, like, bruh",30,30)
-AppGraph.size = {w:AppGraph.dom.width,h:AppGraph.dom.height};
+AppGraph.size = {w:Number(AppGraph.dom.width),h:Number(AppGraph.dom.height)};
 
+AppGraph.clear = function() {
+    AppGraph.g.fillStyle = "white";
+    AppGraph.g.fillRect(0,0,AppGraph.size.w,AppGraph.size.h);
+}
+
+AppGraph.draw = function(data,mode) {
+    if(typeof(data)!="object")
+        return;
+    if(data.length==0)
+        return;
+    if(typeof(data.x)=="number"&&typeof(data.y)=="number") {//Just one point
+        AppGraph.point(data.x,data.y);
+    } else {
+        for(p of data) {
+            if(typeof(p.x)=="number"&&typeof(p.y)=="number") {
+                if(mode=="point")
+                    AppGraph.point(p.x,p.y);
+                if(mode=="line") {
+                    AppGraph.g.moveTo(p.x,p.y);
+                    mode = "line2";
+                }
+                if(mode=="line2") {
+                    AppGraph.g.lineTo(p.x,p.y);
+                }
+            }
+        }
+        switch(mode) {
+            case "line2":
+                AppGraph.g.stroke();
+                break;
+        }
+    }
+}
 AppGraph.point = function(x,y) {
-    g.beginPath();
-    g.arc(x,y,pointSize,0,Math.PI*2);
-    g.fill();
+    with(AppGraph) {
+        g.beginPath();
+        g.arc(x,y,pointSize,0,Math.PI*2);
+        g.fill();
+    }
 }
 
 AppDivs.getDivs = function(n) {
@@ -52,27 +87,33 @@ AppDivs.factorize = function(n) {//40
 }
 
 var divs = [];
-
+var por = 0;//0-1
 function process() {
     divs = [];
     var max = 0;
     var min = 0;
     var lim = Number(document.getElementById("lim").value);
     var ini = Number(document.getElementById("ini").value);
-    var rng = lim-ini;
-    min = AppDivs.getDivs(ini);
-    max = min;
-    for(var n=ini+1,i=0;n<=lim;n++,i++) {
-        var d = AppDivs.getDivs(i)
-        if(d>max)
+    var rng = Math.max(lim-ini,2);
+    /*min = AppDivs.getDivs(ini);
+    max = min;*/
+    for(var n=ini,i=0;n<=lim;n++,i++) {
+        var d = AppDivs.getDivs(i);
+        if(d>max||i==0)
             max = d;
-        if(d<min)
+        if(d<min||i==0)
             min = d;
         divs[i] = {};
-        divs[i].x = 0;
-        //divs[i-ini-1] = {x:0,y:0};
-        //divs.push(d);
+        divs[i].x = AppGraph.size.w/rng*i;//(AppGraph.size.w*0.95)/rng*i+(AppGraph.size.w*0.05);
+        //divs[i].y = AppGraph.size.h-(d*10);
+        divs[i].d = d;
+        por = i/rng;
     }
+    for(var i=0;i<divs.length;i++) {
+        divs[i].y = AppGraph.size.h-AppGraph.size.h/max*divs[i].d;//AppGraph.size.h-((AppGraph.size.h*0.95)/max*divs[i].d+(AppGraph.size.h*0.05));
+        console.log("(%i;%i)",divs[i].x,divs[i].y);
+    }
+    AppGraph.draw(divs,'point');
     console.log("Range: %i > %i",min,max);
 }
 
