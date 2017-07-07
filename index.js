@@ -86,6 +86,8 @@ AppDivs.factorize = function(n) {//40
         AppDivs.numsUsed.pop();
 }
 
+var domD = document.getElementById("d");
+var domN = document.getElementById("n");
 var divs = [];
 var por = 0;//0-1
 function process() {
@@ -97,6 +99,9 @@ function process() {
     var rng = Math.max(lim-ini,2);
     /*min = AppDivs.getDivs(ini);
     max = min;*/
+    divs.ini = ini;
+    divs.lim = lim;
+    divs.rng = rng;
     for(var n=ini,i=0;n<=lim;n++,i++) {
         var d = AppDivs.getDivs(i);
         if(d>max||i==0)
@@ -104,19 +109,37 @@ function process() {
         if(d<min||i==0)
             min = d;
         divs[i] = {};
-        divs[i].x = AppGraph.size.w/rng*i;//(AppGraph.size.w*0.95)/rng*i+(AppGraph.size.w*0.05);
-        //divs[i].y = AppGraph.size.h-(d*10);
+        divs[i].x = AppGraph.size.w/rng*i;
         divs[i].d = d;
         por = i/rng;
     }
+    divs.max = max;
+    divs.min = min;
     for(var i=0;i<divs.length;i++) {
-        divs[i].y = AppGraph.size.h-AppGraph.size.h/max*divs[i].d;//AppGraph.size.h-((AppGraph.size.h*0.95)/max*divs[i].d+(AppGraph.size.h*0.05));
+        divs[i].y = AppGraph.size.h-AppGraph.size.h/max*divs[i].d;
         console.log("(%i;%i)",divs[i].x,divs[i].y);
     }
+    console.log("Biggest: %i\nSmallest: %i",max,min);
     AppGraph.draw(divs,'point');
     console.log("Range: %i > %i",min,max);
 }
 
-function graphicate() {
-
+function h() {
+    var rect = AppGraph.dom.getBoundingClientRect();
+    var mouse = {x:event.clientX-rect.left,y:event.clientY-rect.top};
+    i = Math.floor(mouse.x/(AppGraph.size.w/divs.rng));
+    console.log("N: %i has %i",Number(document.getElementById("ini").value)+i,divs[i].d);
+    domD.innerText = divs[i].d;
+    domN.innerText = divs.ini+i;
+    /*
+    X = W/R*i
+    X = i*W/R
+    X/(W/R) = i
+    32 = 800/40*i
+    32 = i*(20/1)
+    32/20 = i
+    16/10 = i
+    1,6 = i
+    X/(W/R) = i
+    */
 }
