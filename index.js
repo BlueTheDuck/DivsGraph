@@ -91,6 +91,7 @@ var domN = document.getElementById("n");
 var divs = [];
 var por = 0;//0-1
 function process() {
+    AppGraph.clear();
     divs = [];
     var max = 0;
     var min = 0;
