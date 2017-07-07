@@ -6,7 +6,7 @@ var AppGraph = {};
 AppGraph.dom = document.getElementById("graph");
 AppGraph.g = AppGraph.dom.getContext('2d');
 AppGraph.pointSize = 1;
-AppGraph.g.fillText("Bruh, like, bruh",30,30)
+//AppGraph.g.fillText("Bruh, like, bruh",30,30)
 AppGraph.size = {w:Number(AppGraph.dom.width),h:Number(AppGraph.dom.height)};
 
 AppGraph.clear = function() {
@@ -46,6 +46,7 @@ AppGraph.point = function(x,y) {
     with(AppGraph) {
         g.beginPath();
         g.arc(x,y,pointSize,0,Math.PI*2);
+        g.fillStyle="black";
         g.fill();
     }
 }
