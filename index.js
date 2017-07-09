@@ -5,7 +5,7 @@ AppDivs.amntUsed = [];
 var AppGraph = {};
 AppGraph.dom = document.getElementById("graph");
 AppGraph.g = AppGraph.dom.getContext('2d');
-AppGraph.pointSize = 3;
+AppGraph.pointSize = 1;
 //AppGraph.g.fillText("Bruh, like, bruh",30,30)
 AppGraph.size = {w:Number(AppGraph.dom.width),h:Number(AppGraph.dom.height)};
 
@@ -70,8 +70,6 @@ AppDivs.getDivs = function(n) {
     if(n==0)return 0;
     if(n==1)return 1;
     if(n==2)return 2;
-    /*if(n==1)return 1;
-    if(n==2)return 2;*/
     AppDivs.factorize(n);
     res = AppDivs.numsUsed.length;
     //console.log("%i has %i divs",n,res);
@@ -111,6 +109,8 @@ function process() {
     divs = [];
     var max = 0;
     var min = 0;
+    var maxn = 0;
+    var minn = 0
     var lim = Number(document.getElementById("lim").value);
     var ini = Number(document.getElementById("ini").value);
     var rng = Math.max(lim-ini,2);
@@ -121,17 +121,21 @@ function process() {
     divs.rng = rng;
     for(var n=ini,i=0;n<=lim;n++,i++) {
         var d = AppDivs.getDivs(i);
-        if(d>max||i==0)
+        if(d>max||i==0) {
             max = d;
-        if(d<min||i==0)
+            maxn = n;
+        }
+        if(d<min||i==0) {
             min = d;
+            minn = n;
+        }
         divs[i] = {};
         divs[i].x = AppGraph.size.w/rng*i;
         divs[i].d = d;
         por = i/rng;
     }
-    divs.max = max;
-    divs.min = min;
+    divs.max = {d:max,n:maxn};
+    divs.min = {d:min,n:minn};
     for(var i=0;i<divs.length;i++) {
         divs[i].y = AppGraph.size.h-AppGraph.size.h/max*divs[i].d;
         //console.log("(%i;%i)",divs[i].x,divs[i].y);
@@ -155,5 +159,8 @@ function h() {
     i = Math.floor(mouse.x/(AppGraph.size.w/divs.rng));
     //console.log("N: %i has %i",Number(document.getElementById("ini").value)+i,divs[i].d);
     domD.innerText = divs[i].d;
-    domN.innerText = divs.ini+i;
+    domN.value = divs.ini+i;
+}
+domN.onchange = function() {
+    domD.innerText = divs[domN.value].d;
 }
