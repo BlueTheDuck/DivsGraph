@@ -6,6 +6,7 @@ var AppGraph = {};
 AppGraph.dom = document.getElementById("graph");
 AppGraph.g = AppGraph.dom.getContext('2d');
 AppGraph.pointSize = 1;
+AppGraph.guideLines = false;
 //AppGraph.g.fillText("Bruh, like, bruh",30,30)
 AppGraph.size = {w:Number(AppGraph.dom.width),h:Number(AppGraph.dom.height)};
 
@@ -140,6 +141,7 @@ function process() {
     }
     //console.log("Biggest: %i\nSmallest: %i",max,min);
     AppGraph.draw(divs,'point');
+    if(AppGraph.guideLines==false)return;
     //console.log("Range: %i > %i",min,max);
     var horz = [];
     for(var d=0;d<max;d++) {
