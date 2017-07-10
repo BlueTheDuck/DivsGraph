@@ -119,7 +119,7 @@ function process() {
     divs.lim = lim;
     divs.rng = rng;
     for(var n=ini,i=0;n<=lim;n++,i++) {
-        var d = AppDivs.getDivs(i);
+        var d = AppDivs.getDivs(n);
         if(d>max||i==0) {
             max = d;
             maxn = n;
