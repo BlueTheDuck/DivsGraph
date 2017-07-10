@@ -67,9 +67,7 @@ AppGraph.point = function(x,y) {
 AppDivs.getDivs = function(n) {
     AppDivs.numsUsed = [];
     AppDivs.primes = [];
-    if(n==0)return 0;
-    if(n==1)return 1;
-    if(n==2)return 2;
+    if(n<3)return n;
     AppDivs.factorize(n);
     res = AppDivs.numsUsed.length;
     //console.log("%i has %i divs",n,res);
@@ -86,13 +84,13 @@ AppDivs.factorize = function(n) {//40
         }
     }
     AppDivs.numsUsed.push(n);
-    var arrLength = AppDivs.numsUsed.length-1;
+    var arrLength = AppDivs.numsUsed.length;
     var last = AppDivs.numsUsed[arrLength];
     for(var i=0;i<arrLength;i++) {
         var nNum = n/AppDivs.numsUsed[i];
         //console.log("%i / %i = %i",n,AppDivs.numsUsed[i],n);
-        /*if(AppDivs.numsUsed.lastIndexOf(nNum)==-1)
-            AppDivs.numsUsed.push(nNum);*/
+        if(AppDivs.numsUsed.lastIndexOf(nNum)==-1)
+            AppDivs.numsUsed.push(nNum);
     }
     //AppDivs.numsUsed.push(1);
     //AppDivs.numsUsed.push(n);
@@ -113,7 +111,7 @@ function process() {
     var minn = 0
     var lim = Number(document.getElementById("lim").value);
     var ini = Number(document.getElementById("ini").value);
-    var rng = Math.max(lim-ini,2);
+    var rng = Math.max(lim-ini,1);
     /*min = AppDivs.getDivs(ini);
     max = min;*/
     divs.ini = ini;
